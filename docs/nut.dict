@@ -1,4 +1,4 @@
-personal_ws-1.1 en 2546 utf-8
+personal_ws-1.1 en 2555 utf-8
 AAS
 ACFAIL
 ACFREQ
@@ -332,6 +332,7 @@ FreeIPMI
 FreqSens
 Frolov
 FullLoad
+Fuß
 GES
 GETADDRINFO
 GKrellM
@@ -878,6 +879,7 @@ RealSmart
 RedHat
 Redhat
 RefNom
+Regados
 Reinholdtsen
 Remi
 Rene
@@ -1095,6 +1097,7 @@ UPSTEMP
 UPScode
 UPSes
 UPSilon
+UPSmon
 UPSonic
 UPSs
 UPStation
@@ -1131,6 +1134,7 @@ VVV
 Vaclav
 Valderen
 Vdc
+Velloso
 VendorID
 Viewpower
 Viewsonic
@@ -1180,6 +1184,7 @@ YV
 YY
 YYYYMMDD
 YZ
+Ygor
 Yukai
 Yunto
 ZZZZZZZZ
@@ -1200,6 +1205,7 @@ adb
 addcmd
 addenum
 addinfo
+addr
 addrange
 adkorte
 adm
@@ -1278,6 +1284,7 @@ autoscan
 autostart
 autowidth
 auxdata
+avPHK
 avahi
 avr
 awd
@@ -1866,6 +1873,7 @@ mibs
 microcontroller
 microdowell
 microlink
+microsol
 middleware
 minacvi
 minacvo
@@ -2034,6 +2042,7 @@ pfy
 ph
 phasewindow
 phoenixcontact
+phoenixtec
 picocom
 pid
 pidpath
