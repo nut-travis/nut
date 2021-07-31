@@ -117,7 +117,7 @@ set | sort -n """
         //'bodyParStages': {}
         ] // one slowBuild filter configuration
 
-        [name: 'Default autotools driven build with max warnings (allowed to fail)',
+        ,[name: 'Default autotools driven build with max warnings (allowed to fail)',
          disabled: dynacfgPipeline.disableSlowBuildAutotools,
          //branchRegexSource: ~/^(PR-.+|fightwarn.*)$/,
          //branchRegexTarget: ~/^(master|main|stable)$/,
