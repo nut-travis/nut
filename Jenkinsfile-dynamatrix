@@ -12,7 +12,14 @@ import org.nut.dynamatrix.*;
     dynacfgPipeline.disableSlowBuildCIBuildExperimental = true
 
     //dynacfgPipeline.bodyStashCmd = { git (url: "https://github.com/nut-travis/nut", branch: "fightwarn") }
-    dynacfgPipeline.bodyStashCmd = { git (url: "https://github.com/nut-travis/nut", tag: "v2.7.4") }
+    dynacfgPipeline.bodyStashCmd = { checkout([
+        $class: 'GitSCM', branches: [[name: "refs/tags/v2.7.4"]],
+        doGenerateSubmoduleConfigurations: false,
+        extensions: [[$class: 'SubmoduleOption', disableSubmodules: false, parentCredentials: false, recursiveSubmodules: false, reference: '', trackingSubmodules: false]],
+        submoduleCfg: [],
+        userRemoteConfigs: [[url: "https://github.com/nut-travis/nut"]]
+        ])
+    }
 
     dynacfgPipeline.failFast = //true //
         false
