@@ -26,12 +26,16 @@ import org.nut.dynamatrix.*;
     dynacfgPipeline.delayedIssueAnalysis = //false // 
         true
 
+    // While building older release (2.7.4) disable recipes that did not exist back then
     dynacfgPipeline['stylecheck'] = false //true
-    dynacfgPipeline['spellcheck'] = //false //true
+    dynacfgPipeline['spellcheck'] = false //true
+    dynacfgPipeline['shellcheck'] = false //true
+
+    dynacfgPipeline['x-spellcheck'] = //false //true
         '( \${MAKE} VERBOSE=1 SPELLCHECK_ERROR_FATAL=yes spellcheck )'
 
     //dynacfgPipeline['shellcheck'] = true
-    dynacfgPipeline['shellcheck'] = [
+    dynacfgPipeline['x-shellcheck'] = [
         //'stageNameFunc': null,
         'single': '( \${MAKE} shellcheck )',
         'multi': '(cd tests && SHELL_PROGS="$SHELL_PROGS" ./nut-driver-enumerator-test.sh )',
