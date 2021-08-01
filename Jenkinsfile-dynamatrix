@@ -10,6 +10,7 @@ import org.nut.dynamatrix.*;
     dynacfgPipeline.disableSlowBuildAutotools = false
     dynacfgPipeline.disableSlowBuildCIBuild = true
     dynacfgPipeline.disableSlowBuildCIBuildExperimental = true
+    dynacfgPipeline.traceBuildShell_configureEnvvars = true //false
     dynacfgPipeline.traceBuildShell = false //true
     dynacfgPipeline.failFast = //true //
         false
@@ -67,8 +68,11 @@ set | sort -n """
         }
 
         infra.withEnvOptional(dynacfgPipeline.defaultTools) {
+            def dsbcClone = dsbc.clone()
+            def stageNameClone = "${stageName}"
             unstashCleanSrc(dynacfgPipeline.stashnameSrc)
-            buildMatrixCellCI(dynacfgPipeline, dsbc, stageName)
+            buildMatrixCellCI(dynacfgPipeline, dsbsClone, stageNameClone)
+            //buildMatrixCellCI(dynacfgPipeline, dsbc, stageName)
         }
     }
 
@@ -92,7 +96,10 @@ set | sort -n """
             dynacfgPipeline_ciBuild.buildPhases = [:]
             dynacfgPipeline_ciBuild = ci_build.sanityCheckDynacfgPipeline(dynacfgPipeline_ciBuild)
 
-            buildMatrixCellCI(dynacfgPipeline_ciBuild, dsbc, stageName)
+            def stageNameClone = "${stageName}"
+            unstashCleanSrc(dynacfgPipeline.stashnameSrc)
+            buildMatrixCellCI(dynacfgPipeline_ciBuild, dsbsClone, stageNameClone)
+            //buildMatrixCellCI(dynacfgPipeline_ciBuild, dsbc, stageName)
         }
     }
 
