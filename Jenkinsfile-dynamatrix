@@ -10,7 +10,7 @@ import org.nut.dynamatrix.*;
     dynacfgPipeline.disableSlowBuildAutotools = false
     dynacfgPipeline.disableSlowBuildCIBuild = true
     dynacfgPipeline.disableSlowBuildCIBuildExperimental = true
-    dynacfgPipeline.traceBuildShell = true
+    dynacfgPipeline.traceBuildShell = false //true
     dynacfgPipeline.failFast = //true //
         false
     dynacfgPipeline.delayedIssueAnalysis = //false // 
@@ -122,7 +122,7 @@ set | sort -n """
                 runAllowedFailure: true,
                 //dynamatrixAxesLabels: ['OS_FAMILY', 'OS_DISTRO', '${COMPILER}VER', 'ARCH${ARCH_BITS}'],
                 //dynamatrixAxesLabels: [~/^OS/, '${COMPILER}VER', 'ARCH${ARCH_BITS}'],
-                excludeCombos: [ [~/BITS=32/, ~/ARCH_BITS=64/], [~/BITS=64/, ~/ARCH_BITS=32/], [~/OS_DISTRO=openindiana/, ~/CSTDVERSION_cxx=[12].+/, ~/COMPILER=GCC/] ]
+                excludeCombos: [ [~/BITS=32/, ~/ARCH_BITS=64/], [~/BITS=64/, ~/ARCH_BITS=32/], [~/OS_DISTRO=(openindiana|freebsd).*/, ~/CSTDVERSION_cxx=[12].+/, ~/COMPILER=GCC/] ]
                 ], body)
             }, // getParStages
         //'bodyParStages': {}
@@ -156,7 +156,7 @@ set | sort -n """
                 runAllowedFailure: true,
                 //dynamatrixAxesLabels: ['OS_FAMILY', 'OS_DISTRO', '${COMPILER}VER', 'ARCH${ARCH_BITS}'],
                 //dynamatrixAxesLabels: [~/^OS/, '${COMPILER}VER', 'ARCH${ARCH_BITS}'],
-                excludeCombos: [ [~/BITS=32/, ~/ARCH_BITS=64/], [~/BITS=64/, ~/ARCH_BITS=32/], [~/OS_DISTRO=openindiana/, ~/CSTDVERSION_cxx=[12].+/, ~/COMPILER=GCC/] ]
+                excludeCombos: [ [~/BITS=32/, ~/ARCH_BITS=64/], [~/BITS=64/, ~/ARCH_BITS=32/], [~/OS_DISTRO=(openindiana|freebsd).*/, ~/CSTDVERSION_cxx=[12].+/, ~/COMPILER=GCC/] ]
                 ], body)
             }, // getParStages
         //'bodyParStages': {}
@@ -181,8 +181,8 @@ set | sort -n """
                 allowedFailure: [ [~/OS_FAMILY=windows/] ],
                 runAllowedFailure: true,
                 mergeMode: [ 'excludeCombos': 'merge' ], // NOTE: We might want to replace other fields, but excludeCombos must be merged to filter compiler versions vs language standards as centrally defined!
-                // So far allow-failure (or avoid C++11 +) on OpenIndiana (cppcheck pkg seems flawed, at least in various versions of GCC builds)
-                excludeCombos: [ [~/BITS=32/, ~/ARCH_BITS=64/], [~/BITS=64/, ~/ARCH_BITS=32/], [~/CSTDVARIANT=c/], [~/OS_DISTRO=openindiana/, ~/CSTDVERSION_cxx=[12].+/, ~/COMPILER=GCC/] ]
+                // So far allow-failure (or avoid C++11 +) on OpenIndiana (cppcheck pkg seems flawed, at least in various versions of GCC builds) and BSD (also just for GCC)
+                excludeCombos: [ [~/BITS=32/, ~/ARCH_BITS=64/], [~/BITS=64/, ~/ARCH_BITS=32/], [~/CSTDVARIANT=c/], [~/OS_DISTRO=(openindiana|freebsd).*/, ~/CSTDVERSION_cxx=[12].+/, ~/COMPILER=GCC/] ]
                 ], body)
             }, // getParStages
         'bodyParStages': dynacfgPipeline.slowBuildDefaultBody_ci_build
@@ -234,7 +234,8 @@ set | sort -n """
                 allowedFailure: [ [~/OS_FAMILY=windows/], [~/BUILD_WARNOPT=hard/], [~/GCCVER=[01234].+/, ~/BUILD_TYPE=default-alldrv/] ],
                 runAllowedFailure: true,
                 mergeMode: [ 'excludeCombos': 'merge' ], // NOTE: We might want to replace other fields, but excludeCombos must be merged to filter compiler versions vs language standards as centrally defined!
-                excludeCombos: [ [~/BITS=32/, ~/ARCH_BITS=64/], [~/BITS=64/, ~/ARCH_BITS=32/], [~/CSTDVARIANT=c/], [~/OS_DISTRO=openindiana/, ~/CSTDVERSION_cxx=[12].+/, ~/COMPILER=GCC/] ]
+                requireNodelabels: ["NUT_BUILD_CAPS=drivers:all"],
+                excludeCombos: [ [~/BITS=32/, ~/ARCH_BITS=64/], [~/BITS=64/, ~/ARCH_BITS=32/], [~/CSTDVARIANT=c/], [~/OS_DISTRO=(openindiana|freebsd).*/, ~/CSTDVERSION_cxx=[12].+/, ~/COMPILER=GCC/] ]
                 ], body)
             }, // getParStages
         'bodyParStages': dynacfgPipeline.slowBuildDefaultBody_ci_build
@@ -260,7 +261,8 @@ set | sort -n """
                 allowedFailure: [ [~/OS_FAMILY=windows/] ],
                 runAllowedFailure: true,
                 mergeMode: [ 'excludeCombos': 'merge' ], // NOTE: We might want to replace other fields, but excludeCombos must be merged to filter compiler versions vs language standards as centrally defined!
-                excludeCombos: [ [~/BITS=32/, ~/ARCH_BITS=64/], [~/BITS=64/, ~/ARCH_BITS=32/], [~/CSTDVARIANT=c/], [~/OS_DISTRO=openindiana/, ~/CSTDVERSION_cxx=[12].+/, ~/COMPILER=GCC/] ]
+                requireNodelabels: ["NUT_BUILD_CAPS=docs:all"],
+                excludeCombos: [ [~/BITS=32/, ~/ARCH_BITS=64/], [~/BITS=64/, ~/ARCH_BITS=32/], [~/CSTDVARIANT=c/], [~/OS_DISTRO=(openindiana|freebsd).*/, ~/CSTDVERSION_cxx=[12].+/, ~/COMPILER=GCC/] ]
                 ], body)
             }, // getParStages
         'bodyParStages': dynacfgPipeline.slowBuildDefaultBody_ci_build
@@ -286,7 +288,8 @@ set | sort -n """
                 allowedFailure: [ [~/OS_FAMILY=windows/], [~/BUILD_TYPE=default-withdoc:man/] ],
                 runAllowedFailure: true,
                 mergeMode: [ 'excludeCombos': 'merge' ], // NOTE: We might want to replace other fields, but excludeCombos must be merged to filter compiler versions vs language standards as centrally defined!
-                excludeCombos: [ [~/BITS=32/, ~/ARCH_BITS=64/], [~/BITS=64/, ~/ARCH_BITS=32/], [~/CSTDVARIANT=c/], [~/OS_DISTRO=openindiana/, ~/CSTDVERSION_cxx=[12].+/, ~/COMPILER=GCC/] ]
+                requireNodelabels: ["(NUT_BUILD_CAPS=docs:all||NUT_BUILD_CAPS=docs:man)"],
+                excludeCombos: [ [~/BITS=32/, ~/ARCH_BITS=64/], [~/BITS=64/, ~/ARCH_BITS=32/], [~/CSTDVARIANT=c/], [~/OS_DISTRO=(openindiana|freebsd).*/, ~/CSTDVERSION_cxx=[12].+/, ~/COMPILER=GCC/] ]
                 ], body)
             }, // getParStages
         'bodyParStages': dynacfgPipeline.slowBuildDefaultBody_ci_build
@@ -309,7 +312,7 @@ set | sort -n """
                 allowedFailure: [ [~/OS_FAMILY=windows/] ],
                 runAllowedFailure: true,
                 mergeMode: [ 'excludeCombos': 'merge' ], // NOTE: We might want to replace other fields, but excludeCombos must be merged to filter compiler versions vs language standards as centrally defined!
-                excludeCombos: [ [~/BITS=32/, ~/ARCH_BITS=64/], [~/BITS=64/, ~/ARCH_BITS=32/], [~/CSTDVARIANT=c/], [~/OS_DISTRO=openindiana/, ~/CSTDVERSION_cxx=[12].+/, ~/COMPILER=GCC/] ]
+                excludeCombos: [ [~/BITS=32/, ~/ARCH_BITS=64/], [~/BITS=64/, ~/ARCH_BITS=32/], [~/CSTDVARIANT=c/], [~/OS_DISTRO=(openindiana|freebsd).*/, ~/CSTDVERSION_cxx=[12].+/, ~/COMPILER=GCC/] ]
                 ], body)
             }, // getParStages
         'bodyParStages': dynacfgPipeline.slowBuildDefaultBody_ci_build
@@ -332,7 +335,13 @@ set | sort -n """
                 allowedFailure: [ [~/OS_FAMILY=windows/], [~/BUILD_WARNOPT=hard/] ],
                 runAllowedFailure: true,
                 mergeMode: [ 'excludeCombos': 'merge' ], // NOTE: We might want to replace other fields, but excludeCombos must be merged to filter compiler versions vs language standards as centrally defined!
-                excludeCombos: [ [~/BITS=32/, ~/ARCH_BITS=64/], [~/BITS=64/, ~/ARCH_BITS=32/], [~/CSTDVARIANT=c/], [~/COMPILER=GCC/, ~/CSTDVERSION_KEY=(?!89)/], [~/OS_DISTRO=openindiana/, ~/CSTDVERSION_cxx=[12].+/, ~/COMPILER=GCC/] ]
+                excludeCombos: [
+                    [~/BITS=32/, ~/ARCH_BITS=64/],
+                    [~/BITS=64/, ~/ARCH_BITS=32/],
+                    [~/CSTDVARIANT=c/],
+                    [~/COMPILER=GCC/, ~/CSTDVERSION_KEY=(?!89)/],
+                    [~/OS_DISTRO=(openindiana|freebsd).*/, ~/CSTDVERSION_cxx=[12].+/, ~/COMPILER=GCC/]
+                    ]
                 ], body)
             }, // getParStages
         'bodyParStages': dynacfgPipeline.slowBuildDefaultBody_ci_build
@@ -355,7 +364,10 @@ set | sort -n """
                 allowedFailure: [ [~/OS_FAMILY=windows/] ],
                 runAllowedFailure: true,
                 mergeMode: [ 'excludeCombos': 'merge' ], // NOTE: We might want to replace other fields, but excludeCombos must be merged to filter compiler versions vs language standards as centrally defined!
-                excludeCombos: [ [~/BITS=32/, ~/ARCH_BITS=64/], [~/BITS=64/, ~/ARCH_BITS=32/], [~/CSTDVARIANT=c/], [~/COMPILER=(?!GCC)/], [~/OS_DISTRO=openindiana/, ~/CSTDVERSION_cxx=[12].+/, ~/COMPILER=GCC/] ]
+                excludeCombos: [ [~/BITS=32/, ~/ARCH_BITS=64/], [~/BITS=64/, ~/ARCH_BITS=32/], [~/CSTDVARIANT=c/],
+                    [~/COMPILER=(?!GCC)/],
+                    [~/OS_DISTRO=(openindiana|freebsd).*/, ~/CSTDVERSION_cxx=[12].+/, ~/COMPILER=GCC/]
+                    ]
                 ], body)
             }, // getParStages
         'bodyParStages': dynacfgPipeline.slowBuildDefaultBody_ci_build
@@ -380,7 +392,9 @@ set | sort -n """
                 allowedFailure: [ [~/CSTDVARIANT=c/], [~/BUILD_WARNOPT=hard/] ],
                 runAllowedFailure: true,
                 mergeMode: [ 'excludeCombos': 'merge' ], // NOTE: We might want to replace other fields, but excludeCombos must be merged to filter compiler versions vs language standards as centrally defined!
-                excludeCombos: [ [~/BITS=32/, ~/ARCH_BITS=64/], [~/BITS=64/, ~/ARCH_BITS=32/], [~/CSTDVARIANT=gnu/], [~/OS_FAMILY=windows/], [~/OS_DISTRO=openindiana/, ~/CSTDVERSION_cxx=[12].+/, ~/COMPILER=GCC/] ]
+                excludeCombos: [ [~/BITS=32/, ~/ARCH_BITS=64/], [~/BITS=64/, ~/ARCH_BITS=32/], [~/CSTDVARIANT=gnu/], [~/OS_FAMILY=windows/],
+                    [~/OS_DISTRO=(openindiana|freebsd).*/, ~/CSTDVERSION_cxx=[12].+/, ~/COMPILER=GCC/]
+                    ]
                 ], body)
             }, // getParStages
         'bodyParStages': dynacfgPipeline.slowBuildDefaultBody_ci_build
@@ -400,7 +414,7 @@ set | sort -n """
                 dynamatrixAxesCommonEnv: [ ['LANG=C','LC_ALL=C', 'BUILD_TYPE=default-all-errors', 'BUILD_WARNFATAL=yes','BUILD_WARNOPT=hard', 'CPPFLAGS=-fms-extensions'] ] ,
                 allowedFailure: [ [~/CSTDVARIANT=c/], [~/OS_FAMILY=windows/], [~/BUILD_WARNOPT=hard/] ],
                 runAllowedFailure: true,
-                excludeCombos: [ [~/BITS=32/, ~/ARCH_BITS=64/], [~/BITS=64/, ~/ARCH_BITS=32/], [~/OS_FAMILY=(?!windows)/], [~/OS_DISTRO=openindiana/, ~/CSTDVERSION_cxx=[12].+/, ~/COMPILER=GCC/] ]
+                excludeCombos: [ [~/BITS=32/, ~/ARCH_BITS=64/], [~/BITS=64/, ~/ARCH_BITS=32/], [~/OS_FAMILY=(?!windows)/] ]
                 ], body)
             }, // getParStages
         'bodyParStages': dynacfgPipeline.slowBuildDefaultBody_ci_build
@@ -408,7 +422,7 @@ set | sort -n """
     ]
 
     dynacfgPipeline.notifyHandler = {
-        ircNotify notificationStrategy:'FAILURE_AND_FIXED'
+        ircNotify (notificationStrategy:'FAILURE_AND_FIXED')
     }
 
 @NonCPS
