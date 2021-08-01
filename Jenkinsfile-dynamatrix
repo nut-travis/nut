@@ -149,7 +149,8 @@ set | sort -n """
 
                 mergeMode: [ 'dynamatrixAxesVirtualLabelsMap': 'replace', 'excludeCombos': 'merge' ],
                 dynamatrixAxesCommonEnv: [
-                    ['LANG=C','LC_ALL=C'], [ 'CFLAGS="-Wall -Wextra -Werror"', 'CXXFLAGS="-Wall -Wextra -Werror"']
+                    //['LANG=C','LC_ALL=C'], [ 'CFLAGS=-Wall\\ -Wextra\\ -Werror', 'CXXFLAGS=-Wall\\ -Wextra\\ -Werror']
+                    ['LANG=C','LC_ALL=C'], [ 'CFLAGS=-Wall', 'CXXFLAGS=-Wall']
                 ],
                 allowedFailure: [ [~/OS_FAMILY=windows/], [~/CSTDVARIANT=c/], [~/C.*FLAGS=.+Werror/] ],
                 runAllowedFailure: true,
@@ -405,6 +406,10 @@ set | sort -n """
         'bodyParStages': dynacfgPipeline.slowBuildDefaultBody_ci_build
         ] // one slowBuild filter configuration
     ]
+
+    dynacfgPipeline.notifyHandler = {
+        ircNotify notificationStrategy:'FAILURE_AND_FIXED'
+    }
 
 @NonCPS
 def stageNameFunc_ShellcheckCustom(DynamatrixSingleBuildConfig dsbc) {
